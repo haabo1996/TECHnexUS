@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="eng">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechNexus</title>
+    <style>
+        /* Algemene stijlen voor de pagina */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: lightblue;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        /* Digitale klok stijl */
+        .digital-clock {
+            font-size: 8vw; /* Schaal de klok dynamisch */
+            color: green;
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%; /* Zorg dat het in de breedte past */
+        }
+
+        /* Notepad stijl */
+        .notepad {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 90%; /* Flexibele breedte */
+            max-width: 400px; /* Limiet voor grote schermen */
+            height: 60vh; /* Hoogte afhankelijk van het scherm */
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .notepad textarea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            padding: 10px;
+            font-size: 1.2em;
+            resize: none;
+            border-radius: 5px;
+            background-color: orange;
+        }
+
+        /* Calculator stijl */
+        .calculator {
+            background-color: grey;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+            margin: 10px;
+        }
+
+        .display {
+            width: 100%;
+            height: 50px;
+            text-align: right;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 5px;
+        }
+
+        button {
+            font-size: 1em;
+            padding: 10px;
+            border: none;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #ddd;
+        }
+
+        button.operator {
+            background-color: #f79c42;
+            color: white;
+        }
+
+        button.operator:hover {
+            background-color: #f39c12;
+        }
+
+        /* Media Queries voor kleinere schermen */
+        @media (max-width: 600px) {
+            .digital-clock {
+                font-size: 12vw; /* Grotere klok voor kleine schermen */
+            }
+
+            .notepad {
+                height: 50vh; /* Lagere hoogte voor compacte schermen */
+            }
+
+            .buttons button {
+                padding: 5px; /* Kleiner formaat knoppen */
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Digitale klok sectie -->
+    <div class="digital-clock" id="digital-clock"></div>
+
+    <!-- Notepad sectie -->
+    <div class="notepad">
+        <textarea id="notepad" placeholder="Design by Haabo.."></textarea>
+    </div>
+
+    <!-- Calculator sectie -->
+    <div class="calculator">
+        <input type="text" id="display" class="display" disabled />
+        <div class="buttons">
+            <button class="btn" onclick="appendNumber('7')">7</button>
+            <button class="btn" onclick="appendNumber('8')">8</button>
+            <button class="btn" onclick="appendNumber('9')">9</button>
+            <button class="btn operator" onclick="appendOperator('/')">/</button>
+
+            <button class="btn" onclick="appendNumber('4')">4</button>
+            <button class="btn" onclick="appendNumber('5')">5</button>
+            <button class="btn" onclick="appendNumber('6')">6</button>
+            <button class="btn operator" onclick="appendOperator('*')">*</button>
+
+            <button class="btn" onclick="appendNumber('1')">1</button>
+            <button class="btn" onclick="appendNumber('2')">2</button>
+            <button class="btn" onclick="appendNumber('3')">3</button>
+            <button class="btn operator" onclick="appendOperator('-')">-</button>
+
+            <button class="btn" onclick="appendNumber('0')">0</button>
+            <button class="btn" onclick="clearDisplay()">C</button>
+            <button class="btn" onclick="calculateResult()">=</button>
+            <button class="btn" onclick="appendNumber('.')">.</button>
+            <button class="btn operator" onclick="appendOperator('+')">+</button>
+        </div>
+    </div>
+
+    <script>
+        // Functie voor het bijwerken van de digitale klok
+        function updateClock() {
+            const now = new Date();
+            const options = { timeZone: 'Europe/Amsterdam', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const dutchTime = now.toLocaleTimeString('nl-NL', options);
+            document.getElementById('digital-clock').innerText = dutchTime;
+        }
+        setInterval(updateClock, 1000); // Werk elke seconde bij
+        updateClock(); // Initialiseer de klok
+
+        // Calculator functionaliteit
+        let display = document.getElementById("display");
+
+        function appendNumber(number) {
+            display.value += number;
+        }
+
+        function appendOperator(operator) {
+            display.value += ' ' + operator + ' ';
+        }
+
+        function clearDisplay() {
+            display.value = '';
+        }
+
+        function calculateResult() {
+            try {
+                if (/[^0-9+\-*/. ]/.test(display.value)) {
+                    throw new Error("Invalid Input");
+                }
+                display.value = eval(display.value); // Bereken de expressie
+            } catch (e) {
+                display.value = 'Error'; // Toon foutmelding als er iets mis is
+            }
+        }
+    </script>
+</body>
+</html>
